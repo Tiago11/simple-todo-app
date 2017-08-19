@@ -4,7 +4,7 @@
 
 Submitted by: **Santiago Paez**
 
-Time spent: **3** hours spent in total
+Time spent: **5** hours spent in total
 
 ## User Stories
 
@@ -20,7 +20,7 @@ The following **optional** features are implemented:
 Persistance done using DBFlow and a `SimpleCursorAdapter` as a first approach. I'll work next on using a `CursorLoader` through the `LoaderManager` to improve responsiveness.
 * [ ] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
 * [ ] Add support for completion due dates for todo items (and display within listview item)
-* [ ] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
+* [X] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
 * [ ] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
@@ -32,9 +32,9 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/rh10pRv.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/pnnyd1I.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-[Link to video on Imgur](http://i.imgur.com/rh10pRv.gifv)
+[Link to video on Imgur](http://imgur.com/pnnyd1I)
 
 ## Project Analysis
 
@@ -54,6 +54,7 @@ The `convertView` parameter give us the chance to reuse a row of the `listView`.
 ## Notes
 
 I didn't find any major challenge so far, I'm sure those will come as I add more features into the app. Stay tuned for upcoming features, and challenges :)
+ 
 
 ## License
 

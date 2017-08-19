@@ -1,8 +1,8 @@
 package com.codepath.tiago.simpletodo;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,10 +15,7 @@ import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-public class MainActivity extends AppCompatActivity {
-
-    // Request code for EditItemActivity.
-    private static final int EDIT_ITEM_REQUEST_CODE = 1;
+public class MainActivity extends AppCompatActivity implements EditTodoItemDialogFragment.EditTodoItemDialogListener {
 
     // Tag for logging.
     private static final String TAG = MainActivity.class.toString();
@@ -32,26 +29,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // find reference to lvItems view.
-        lvItems = (ListView) findViewById(R.id.lvItems);
-
-        Cursor cursorItems = SQLite.select().from(TodoItem.class).queryResults().cursor();
-
-        String[] fromColumns = new String[] {"title"}; // TODO: The column name can't be hardcoded.
-        int[] toViews = new int[] {android.R.id.text1}; // The textView in simple_list_item_1.
-
         try {
+            // find reference to lvItems view.
+            lvItems = (ListView) findViewById(R.id.lvItems);
+
+            Cursor cursorItems = SQLite.select().from(TodoItem.class).queryResults().cursor();
+
+            String[] fromColumns = new String[] {TodoItem_Table.title.toString().replaceAll("`", "")};
+            int[] toViews = new int[] {android.R.id.text1}; // The textView in simple_list_item_1.
 
             simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
                     cursorItems, fromColumns, toViews, 0);
+
+            lvItems.setAdapter(simpleCursorAdapter);
+
+            // Attach event listeners to the ListView.
+            setupListViewListener();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
 
-        lvItems.setAdapter(simpleCursorAdapter);
-
-        // Attach event listeners to the ListView.
-        setupListViewListener();
     }
 
     /*
@@ -65,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemLongClick(AdapterView<?> adapter,
                                                    View item, int pos, long id) {
                         // Remove the item that was long-clicked.
-                        //Cursor c = simpleCursorAdapter.getCursor();
-                        //c.moveToPosition(pos);
-                        //TodoItem rmTodoItem = new TodoItem(c);
                         TodoItem rmTodoItem = getTodoItemFromCursorAdapter(pos);
                         rmTodoItem.delete();
 
@@ -85,18 +79,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapter,
                                                View item, int pos, long id) {
-                        // Create a Intent to communicate across Activities.
-                        Intent i = new Intent(MainActivity.this, EditItemActivity.class);
 
                         // Get the title of the item clicked.
                         String titleItem = getTitleFromCursorAdapter(pos);
 
-                        // Store the title and position of the item in the Intent.
-                        i.putExtra("title", titleItem);
-                        i.putExtra("pos", pos);
-
-                        // Start the |EditItemActivity| expecting a result from it.
-                        startActivityForResult(i, EDIT_ITEM_REQUEST_CODE);
+                        // Show the edit dialog.
+                        showEditTodoItemDialog(new TodoItem(titleItem), pos);
                     }
                 }
         );
@@ -132,42 +120,6 @@ public class MainActivity extends AppCompatActivity {
         etNewItem.setText("");
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-
-            // The result is from |EditItemActivity|.
-            if (requestCode == EDIT_ITEM_REQUEST_CODE) {
-
-                // Get the data from the Intent.
-                int pos = data.getExtras().getInt("pos");
-                String newTitleItem = data.getExtras().getString("newTitle");
-
-                // Get the original title of the item.
-                String oldTitleItem = getTitleFromCursorAdapter(pos);
-
-                // If the title of the item wasn't changed, we don't do anything.
-                if (oldTitleItem.equals(newTitleItem)) {
-                    return;
-                }
-                try {
-                    // Set the item new title, notify the adapter and write changes to a file.
-                    TodoItem upTodoItem = SQLite.select()
-                            .from(TodoItem.class)
-                            .where(TodoItem_Table.title.eq(oldTitleItem))
-                            .querySingle();
-                    upTodoItem.setTitle(newTitleItem);
-                    upTodoItem.update();
-
-                    // Update the cursor adapter.
-                    updateAllItemsInCursorAdapter();
-                } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
-                }
-            }
-        }
-    }
-
     /*
      * Fetches all the items from the database and connects them to the adapter through a cursor.
      */
@@ -186,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     private String getTitleFromCursorAdapter(int pos) {
         Cursor c = simpleCursorAdapter.getCursor();
         c.moveToPosition(pos);
-        return c.getString(c.getColumnIndex("title")); // TODO: Column name can't be hardcoded.
+        return c.getString(c.getColumnIndex(TodoItem_Table.title.toString().replaceAll("`", "")));
     }
 
     /*
@@ -197,4 +149,66 @@ public class MainActivity extends AppCompatActivity {
         c.moveToPosition(pos);
         return new TodoItem(c);
     }
+
+    private void showEditTodoItemDialog(TodoItem todoItem, int pos) {
+        FragmentManager fm = getSupportFragmentManager();
+        EditTodoItemDialogFragment editTodoItemDialogFragment = EditTodoItemDialogFragment.newInstance(todoItem, pos);
+        editTodoItemDialogFragment.show(fm, "fragment_alert");
+    }
+
+    @Override
+    public void onFinishEditDialog(TodoItem todoItem, int pos) {
+
+        // Get the new title of the item.
+        String newTitleItem = todoItem.getTitle();
+
+        // Get the original title of the item.
+        String oldTitleItem = getTitleFromCursorAdapter(pos);
+
+        // If the title of the item wasn't changed, we don't do anything.
+        if (oldTitleItem.equals(newTitleItem)) {
+            return;
+        }
+        try {
+            // Set the item new title, notify the adapter and write changes to a file.
+            TodoItem upTodoItem = SQLite.select()
+                    .from(TodoItem.class)
+                    .where(TodoItem_Table.title.eq(oldTitleItem))
+                    .querySingle();
+            upTodoItem.setTitle(newTitleItem);
+            upTodoItem.update();
+
+            // Update the cursor adapter.
+            updateAllItemsInCursorAdapter();
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

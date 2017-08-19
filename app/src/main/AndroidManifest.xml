@@ -18,11 +18,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".EditItemActivity"
-            android:label="@string/edit_item_activity_title">
-
-        </activity>
     </application>
 
 </manifest>
