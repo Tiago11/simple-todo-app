@@ -32,7 +32,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/pnnyd1I.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![](http://i.imgur.com/pnnyd1I.gif)
 
 [Link to video on Imgur](http://imgur.com/pnnyd1I)
 
