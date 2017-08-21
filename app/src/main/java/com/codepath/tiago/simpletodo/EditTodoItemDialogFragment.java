@@ -8,15 +8,20 @@ import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by tiago on 8/18/17.
  */
 
 public class EditTodoItemDialogFragment extends DialogFragment {
-    private EditText etEditItem;
+    private EditText etEditTitle;
+    private DatePicker dpEditDate;
 
     public EditTodoItemDialogFragment() {
         // Empty constructor is required for DialogFragment.
@@ -25,9 +30,20 @@ public class EditTodoItemDialogFragment extends DialogFragment {
     public static EditTodoItemDialogFragment newInstance(TodoItem todoItem, int pos) {
         EditTodoItemDialogFragment frag = new EditTodoItemDialogFragment();
 
+        // Parse the items date into a Date object.
+        Date pDate = todoItem.strToDate();
+        Calendar c = Calendar.getInstance();
+        c.setTime(pDate);
+        int dateYear = c.get(Calendar.YEAR);
+        int dateMonth = c.get(Calendar.MONTH);
+        int dateDay = c.get(Calendar.DAY_OF_MONTH);
+
         // Create a Bundle with the information I want to pass to the dialogFragment.
         Bundle args = new Bundle();
         args.putString("todoTitle", todoItem.getTitle());
+        args.putInt("dateYear", dateYear);
+        args.putInt("dateMonth", dateMonth);
+        args.putInt("dateDay", dateDay);
         args.putInt("pos", pos);
 
         // Set the Bundle.
@@ -48,13 +64,33 @@ public class EditTodoItemDialogFragment extends DialogFragment {
         final View v = inflater.inflate(R.layout.fragment_edit_item, null);
 
         // Find the reference of the view's editText field.
-        etEditItem = (EditText) v.findViewById(R.id.etEditItem);
+        etEditTitle = (EditText) v.findViewById(R.id.etEditTitle);
+
+        // Find the reference of the view's datePicker.
+        dpEditDate = (DatePicker) v.findViewById(R.id.dpEditDate);
 
         // Get the title of the item from the activity.
         String titleItem = getArguments().getString("todoTitle");
 
         // Append it to the editText field.
-        etEditItem.append(titleItem);
+        etEditTitle.append(titleItem);
+
+        // Get the date information.
+        int dateYear = getArguments().getInt("dateYear");
+        int dateMonth = getArguments().getInt("dateMonth");
+        int dateDay = getArguments().getInt("dateDay");
+
+        // Set the date picker to the item's date.
+        dpEditDate.init(dateYear, dateMonth, dateDay, null);
+
+        /*
+            TODO: There is a problem here, what if the original date of the item is before today's date?
+            TODO: One possible solution could be to check for that, and if that is the case, force the
+            TODO: date picker to show today's date.
+         */
+
+        // Set the minimum date of the date picker to today, we don't want to do thing in the past.
+        dpEditDate.setMinDate(System.currentTimeMillis() - 1000);
 
         // Set and create an alertDialog with our custom view.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -68,7 +104,16 @@ public class EditTodoItemDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                TodoItem upTodoItem = new TodoItem(etEditItem.getText().toString().trim());
+                // Get the new title.
+                String itemTitle = etEditTitle.getText().toString().trim();
+
+                // Get the new date.
+                Calendar c = Calendar.getInstance();
+                c.set(dpEditDate.getYear(), dpEditDate.getMonth(), dpEditDate.getDayOfMonth());
+                Date itemDate = c.getTime();
+
+                // Create the item.
+                TodoItem upTodoItem = new TodoItem(itemTitle, itemDate);
                 int pos = getArguments().getInt("pos");
 
                 // If the new title is empty, don't do anything and show a message.
@@ -104,25 +149,3 @@ public class EditTodoItemDialogFragment extends DialogFragment {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

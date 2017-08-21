@@ -6,4 +6,8 @@
     <string name="edit_item_label">Edit item below:</string>
     <string name="main_activity_title">Simple Todo App</string>
     <string name="edit_item_activity_title">Edit Item</string>
+    <string name="add_title_label">Title:</string>
+    <string name="add_date_label">Select date:</string>
+    <string name="edit_title_label">New Title:</string>
+    <string name="edit_date_label">New Date</string>
 </resources>

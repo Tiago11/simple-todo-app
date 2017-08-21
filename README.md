@@ -4,7 +4,7 @@
 
 Submitted by: **Santiago Paez**
 
-Time spent: **5** hours spent in total
+Time spent: **6** hours spent in total
 
 ## User Stories
 
@@ -16,25 +16,26 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-* [X] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
-Persistance done using DBFlow and a `SimpleCursorAdapter` as a first approach. I'll work next on using a `CursorLoader` through the `LoaderManager` to improve responsiveness.
+* [X] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file - Persistance done using DBFlow and a `SimpleCursorAdapter` as a first approach. I'll work next on using a `CursorLoader` through the `LoaderManager` to improve responsiveness.
 * [ ] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
-* [ ] Add support for completion due dates for todo items (and display within listview item)
+* [X] Add support for completion due dates for todo items (and display within listview item) - due dates on both add and edit actions.
 * [X] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
 * [ ] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
 The following **additional** features are implemented:
 
+* [X] Add new Todo Item as its own Activity, with the `MainActivity` as the parent activity and "Up" button to facilitate navigation.
+* [X] Use Parcel (Parceler) to send java objects through activities. 
 * [ ] List anything else that you can get done to improve the app functionality!
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-![](http://i.imgur.com/pnnyd1I.gif)
+![](http://i.imgur.com/nkIrTrd.gif)
 
-[Link to video on Imgur](http://imgur.com/pnnyd1I)
+[Link to video on Imgur](http://imgur.com/nkIrTrd)
 
 ## Project Analysis
 

@@ -1,24 +1,30 @@
 package com.codepath.tiago.simpletodo;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import org.parceler.Parcels;
 
 public class MainActivity extends AppCompatActivity implements EditTodoItemDialogFragment.EditTodoItemDialogListener {
 
     // Tag for logging.
     private static final String TAG = MainActivity.class.toString();
+
+    // Request code for the |AddTodoItemActivity| intent.
+    private final int ADD_NEW_ITEM_REQUEST_CODE = 1;
 
     private ListView lvItems;
 
@@ -30,15 +36,19 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
         setContentView(R.layout.activity_main);
 
         try {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
             // find reference to lvItems view.
             lvItems = (ListView) findViewById(R.id.lvItems);
 
             Cursor cursorItems = SQLite.select().from(TodoItem.class).queryResults().cursor();
 
-            String[] fromColumns = new String[] {TodoItem_Table.title.toString().replaceAll("`", "")};
-            int[] toViews = new int[] {android.R.id.text1}; // The textView in simple_list_item_1.
+            String[] fromColumns = new String[] {TodoItem_Table.title.toString().replaceAll("`", ""),
+                    TodoItem_Table.date.toString().replaceAll("`", "")};
+            int[] toViews = new int[] {android.R.id.text1, android.R.id.text2}; // The textViews in simple_list_item_2.
 
-            simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
+            simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2,
                     cursorItems, fromColumns, toViews, 0);
 
             lvItems.setAdapter(simpleCursorAdapter);
@@ -49,6 +59,48 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
             Log.e(TAG, Log.getStackTraceString(e));
         }
 
+    }
+
+    /*
+     * Creates the items on the menu (toolbar).
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu, this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /*
+     *
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.miAddNewItem:
+                Intent i = new Intent(MainActivity.this, AddTodoItemActivity.class);
+                startActivityForResult(i, ADD_NEW_ITEM_REQUEST_CODE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*
+     *
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ADD_NEW_ITEM_REQUEST_CODE) {
+                TodoItem todoItem = (TodoItem) Parcels.unwrap(data.getParcelableExtra("todoItem"));
+                todoItem.save();
+
+                // Update the cursor adapter.
+                updateAllItemsInCursorAdapter();
+
+            }
+        }
     }
 
     /*
@@ -81,43 +133,13 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
                                                View item, int pos, long id) {
 
                         // Get the title of the item clicked.
-                        String titleItem = getTitleFromCursorAdapter(pos);
+                        TodoItem todoItem = getTodoItemFromCursorAdapter(pos);
 
                         // Show the edit dialog.
-                        showEditTodoItemDialog(new TodoItem(titleItem), pos);
+                        showEditTodoItemDialog(todoItem, pos);
                     }
                 }
         );
-    }
-
-    /*
-     * Fires when "Add Item" button is pressed on this Activity.
-     * Adds an item to the list, unless the item description is empty.
-     */
-    public void onAddItem(View view) {
-        // Find reference to etNewItem view.
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-
-        // Get the title of the new item.
-        String titleItem = etNewItem.getText().toString();
-
-        // Check if the text field is empty, we don't want to add empty items.
-        if (TextUtils.isEmpty(titleItem)) {
-
-            // Show a Toast message to the user and do nothing.
-            Toast.makeText(this, "Sorry! Cannot add an empty item.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        // Add the new item to the adapter.
-        TodoItem newTodoItem = new TodoItem(titleItem);
-        newTodoItem.save();
-
-        // Update the cursor adapter.
-        updateAllItemsInCursorAdapter();
-
-        // Clear the text field.
-        etNewItem.setText("");
     }
 
     /*
@@ -159,56 +181,17 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
     @Override
     public void onFinishEditDialog(TodoItem todoItem, int pos) {
 
-        // Get the new title of the item.
-        String newTitleItem = todoItem.getTitle();
+        // Get the original item from the database.
+        TodoItem item = getTodoItemFromCursorAdapter(pos);
 
-        // Get the original title of the item.
-        String oldTitleItem = getTitleFromCursorAdapter(pos);
+        // Update the fields.
+        item.setTitle(todoItem.getTitle());
+        item.setDate(todoItem.strToDate());
 
-        // If the title of the item wasn't changed, we don't do anything.
-        if (oldTitleItem.equals(newTitleItem)) {
-            return;
-        }
-        try {
-            // Set the item new title, notify the adapter and write changes to a file.
-            TodoItem upTodoItem = SQLite.select()
-                    .from(TodoItem.class)
-                    .where(TodoItem_Table.title.eq(oldTitleItem))
-                    .querySingle();
-            upTodoItem.setTitle(newTitleItem);
-            upTodoItem.update();
+        // Update the item into the database.
+        item.update();
 
-            // Update the cursor adapter.
-            updateAllItemsInCursorAdapter();
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        }
-
+        // Update the cursor adapter.
+        updateAllItemsInCursorAdapter();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

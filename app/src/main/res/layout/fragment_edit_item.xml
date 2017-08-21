@@ -6,13 +6,48 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/etEditItem"
+        android:id="@+id/etEditTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="76dp"
         android:ems="10"
         android:imeOptions="actionDone"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="73dp" />
+
+    <DatePicker
+        android:id="@+id/dpEditDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etEditTitle"
+        android:layout_marginTop="39dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="45dp"
+        android:text="@string/edit_title_label" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etEditTitle"
+        android:layout_marginTop="15dp"
+        android:text="@string/edit_date_label" />
+
 </RelativeLayout>
