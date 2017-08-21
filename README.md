@@ -26,7 +26,8 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 * [X] Add new Todo Item as its own Activity, with the `MainActivity` as the parent activity and "Up" button to facilitate navigation.
-* [X] Use Parcel (Parceler) to send java objects through activities. 
+* [X] Use Parcel (Parceler) to send java objects through activities.
+* [X] Add Toolbar with actions using `android.support.v7.widget.Toolbar`.
 * [ ] List anything else that you can get done to improve the app functionality!
 
 ## Video Walkthrough
