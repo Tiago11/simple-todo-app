@@ -4,7 +4,7 @@
 
 Submitted by: **Santiago Paez**
 
-Time spent: **6** hours spent in total
+Time spent: **8** hours spent in total
 
 ## User Stories
 
@@ -17,14 +17,19 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 * [X] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file - Persistance done using DBFlow and a `SimpleCursorAdapter` as a first approach. I'll work next on using a `CursorLoader` through the `LoaderManager` to improve responsiveness.
-* [ ] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
+* [X] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
 * [X] Add support for completion due dates for todo items (and display within listview item) - due dates on both add and edit actions.
 * [X] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
-* [ ] Tweak the style improving the UI / UX, play with colors, images or backgrounds
+* [X] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
 The following **additional** features are implemented:
 
+
+* [X] Add splash screen and launch icon.
+* [X] Reorgnize files under java folder into packages (activities, adapters, data, models, etc)
+* [X] The item shows "Today" or "Tomorrow" if the due date is one of those.
+* [X] Add AlertDialog to warn the user before deleting an item from the list.
 * [X] Add new Todo Item as its own Activity, with the `MainActivity` as the parent activity and "Up" button to facilitate navigation.
 * [X] Use Parcel (Parceler) to send java objects through activities.
 * [X] Add Toolbar with actions using `android.support.v7.widget.Toolbar`.
@@ -34,9 +39,9 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-![](http://i.imgur.com/nkIrTrd.gif)
+![](http://i.imgur.com/Pf8oDkd.gif)
 
-[Link to video on Imgur](http://imgur.com/nkIrTrd)
+[Link to video on Imgur](http://imgur.com/Pf8oDkd)
 
 ## Project Analysis
 
@@ -55,7 +60,9 @@ The `convertView` parameter give us the chance to reuse a row of the `listView`.
 
 ## Notes
 
-I didn't find any major challenge so far, I'm sure those will come as I add more features into the app. Stay tuned for upcoming features, and challenges :)
+The main challenge I faced was to find quality documentation. It seems that the best documentation out there is the official Android documentation and Codepath Android Cliffnotes. There is a lot of personal blogs with examples, but they are either out of date or using strange practices.
+
+Another difficulty I found, it seems to me like there is an "Android way" of doing certain things. It wasn't always clear what was the best approach to solve a specific problem (of the many possible options) and I couldn't find the answers online. Knowing people who develops professionally might be a good way to evacuate those doubts. 
  
 
 ## License
