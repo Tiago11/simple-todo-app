@@ -1,9 +1,11 @@
 package com.codepath.tiago.simpletodo.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,11 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
+import com.codepath.tiago.simpletodo.R;
 import com.codepath.tiago.simpletodo.adapters.TodoCursorAdapter;
 import com.codepath.tiago.simpletodo.fragments.EditTodoItemDialogFragment;
-import com.codepath.tiago.simpletodo.R;
 import com.codepath.tiago.simpletodo.models.TodoItem;
 import com.codepath.tiago.simpletodo.models.TodoItem_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -32,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
     private final int ADD_NEW_ITEM_REQUEST_CODE = 1;
 
     private ListView lvItems;
-
-    private SimpleCursorAdapter simpleCursorAdapter;
 
     private TodoCursorAdapter todoAdapter;
 
@@ -55,24 +54,9 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
 
             Cursor cursorItems = SQLite.select().from(TodoItem.class).queryResults().cursor();
 
-            //String[] fromColumns = new String[] {TodoItem_Table.title.toString().replaceAll("`", ""),
-            //        TodoItem_Table.date.toString().replaceAll("`", "")};
-            //int[] toViews = new int[] {android.R.id.text1, android.R.id.text2}; // The textViews in simple_list_item_2.
-
-            //simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2,
-            //        cursorItems, fromColumns, toViews, 0);
-
-            //lvItems.setAdapter(simpleCursorAdapter);
-
-            /**************************************************************************************/
-            // Start of new adapter
-
             todoAdapter = new TodoCursorAdapter(this, cursorItems);
 
             lvItems.setAdapter(todoAdapter);
-
-            // End of new adapter
-            /**************************************************************************************/
 
             // Attach event listeners to the ListView.
             setupListViewListener();
@@ -134,12 +118,37 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapter,
                                                    View item, int pos, long id) {
-                        // Remove the item that was long-clicked.
-                        TodoItem rmTodoItem = getTodoItemFromCursorAdapter(pos);
-                        rmTodoItem.delete();
 
-                        // Update the cursor adapter.
-                        updateAllItemsInCursorAdapter();
+                        // |posToDelete| is passed closure style into the listener.
+                        final int posToDelete = pos;
+
+                        // Create an alert dialog to check if the user wants to delete the item.
+                        final AlertDialog.Builder dialogCheck = new AlertDialog.Builder(MainActivity.this);
+                        dialogCheck.setMessage(R.string.alert_delete);
+                        dialogCheck.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                // Remove the item that was long-clicked.
+                                TodoItem rmTodoItem = getTodoItemFromCursorAdapter(posToDelete);
+                                rmTodoItem.delete();
+
+                                // Update the cursor adapter.
+                                updateAllItemsInCursorAdapter();
+
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        dialogCheck.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // If the user pressed cancel, we don't do anything
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                        // Show the dialog.
+                        dialogCheck.show();
 
                         return true;
                     }
