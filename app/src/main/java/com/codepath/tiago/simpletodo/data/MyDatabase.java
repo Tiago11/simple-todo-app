@@ -1,4 +1,4 @@
-package com.codepath.tiago.simpletodo;
+package com.codepath.tiago.simpletodo.data;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

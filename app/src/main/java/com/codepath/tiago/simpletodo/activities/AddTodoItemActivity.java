@@ -1,4 +1,4 @@
-package com.codepath.tiago.simpletodo;
+package com.codepath.tiago.simpletodo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.codepath.tiago.simpletodo.R;
+import com.codepath.tiago.simpletodo.models.TodoItem;
 
 import org.parceler.Parcels;
 

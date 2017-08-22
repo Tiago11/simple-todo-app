@@ -1,8 +1,9 @@
-package com.codepath.tiago.simpletodo;
+package com.codepath.tiago.simpletodo.models;
 
 import android.database.Cursor;
 import android.util.Log;
 
+import com.codepath.tiago.simpletodo.data.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

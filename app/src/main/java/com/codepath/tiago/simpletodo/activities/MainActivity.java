@@ -1,4 +1,4 @@
-package com.codepath.tiago.simpletodo;
+package com.codepath.tiago.simpletodo.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.codepath.tiago.simpletodo.fragments.EditTodoItemDialogFragment;
+import com.codepath.tiago.simpletodo.R;
+import com.codepath.tiago.simpletodo.models.TodoItem;
+import com.codepath.tiago.simpletodo.models.TodoItem_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.parceler.Parcels;

@@ -1,4 +1,4 @@
-package com.codepath.tiago.simpletodo;
+package com.codepath.tiago.simpletodo.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.codepath.tiago.simpletodo.R;
+import com.codepath.tiago.simpletodo.models.TodoItem;
 
 import java.util.Calendar;
 import java.util.Date;
