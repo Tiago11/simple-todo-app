@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.codepath.tiago.simpletodo.adapters.TodoCursorAdapter;
 import com.codepath.tiago.simpletodo.fragments.EditTodoItemDialogFragment;
 import com.codepath.tiago.simpletodo.R;
 import com.codepath.tiago.simpletodo.models.TodoItem;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
 
     private SimpleCursorAdapter simpleCursorAdapter;
 
+    private TodoCursorAdapter todoAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,19 +46,33 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
+            // Show app-icon on the toolbar.
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setIcon(R.drawable.ic_bow);
+
             // find reference to lvItems view.
             lvItems = (ListView) findViewById(R.id.lvItems);
 
             Cursor cursorItems = SQLite.select().from(TodoItem.class).queryResults().cursor();
 
-            String[] fromColumns = new String[] {TodoItem_Table.title.toString().replaceAll("`", ""),
-                    TodoItem_Table.date.toString().replaceAll("`", "")};
-            int[] toViews = new int[] {android.R.id.text1, android.R.id.text2}; // The textViews in simple_list_item_2.
+            //String[] fromColumns = new String[] {TodoItem_Table.title.toString().replaceAll("`", ""),
+            //        TodoItem_Table.date.toString().replaceAll("`", "")};
+            //int[] toViews = new int[] {android.R.id.text1, android.R.id.text2}; // The textViews in simple_list_item_2.
 
-            simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2,
-                    cursorItems, fromColumns, toViews, 0);
+            //simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2,
+            //        cursorItems, fromColumns, toViews, 0);
 
-            lvItems.setAdapter(simpleCursorAdapter);
+            //lvItems.setAdapter(simpleCursorAdapter);
+
+            /**************************************************************************************/
+            // Start of new adapter
+
+            todoAdapter = new TodoCursorAdapter(this, cursorItems);
+
+            lvItems.setAdapter(todoAdapter);
+
+            // End of new adapter
+            /**************************************************************************************/
 
             // Attach event listeners to the ListView.
             setupListViewListener();
@@ -155,14 +172,16 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
         // This method closes the old cursor releasing its resources.
         // It also tells the `ListView` to redraw its elements, so we don't have
         // to manually notify the adapter that the underlying data has changed.
-        simpleCursorAdapter.changeCursor(nc);
+        //simpleCursorAdapter.changeCursor(nc);
+        todoAdapter.changeCursor(nc);
     }
 
     /*
      * Returns the title of the item at position |pos| of the cursor.
      */
     private String getTitleFromCursorAdapter(int pos) {
-        Cursor c = simpleCursorAdapter.getCursor();
+        //Cursor c = simpleCursorAdapter.getCursor();
+        Cursor c = todoAdapter.getCursor();
         c.moveToPosition(pos);
         return c.getString(c.getColumnIndex(TodoItem_Table.title.toString().replaceAll("`", "")));
     }
@@ -171,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements EditTodoItemDialo
     * Returns the item at position |pos| of the cursor.
      */
     private TodoItem getTodoItemFromCursorAdapter(int pos) {
-        Cursor c = simpleCursorAdapter.getCursor();
+        //Cursor c = simpleCursorAdapter.getCursor();
+        Cursor c = todoAdapter.getCursor();
         c.moveToPosition(pos);
         return new TodoItem(c);
     }

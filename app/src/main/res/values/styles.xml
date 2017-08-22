@@ -14,4 +14,9 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <!-- Edit dialog theme -->
+    <style name="EditDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

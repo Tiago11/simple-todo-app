@@ -15,6 +15,15 @@
         android:layout_height="wrap_content"
         app:titleTextColor="@android:color/white"
         android:background="?attr/colorPrimaryDark">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_new_item_activity_label"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"/>
+
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,6 +38,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:text="@string/btn_add_item_label"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@android:color/white"
             android:onClick="onSubmit"/>
 
         <TextView
@@ -39,7 +50,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="42dp"
-            android:text="@string/add_title_label" />
+            android:text="@string/add_title_label"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
             android:id="@+id/etTitleItem"
@@ -61,7 +73,8 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/etTitleItem"
             android:layout_marginTop="42dp"
-            android:text="@string/add_date_label" />
+            android:text="@string/add_date_label"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <DatePicker
             android:id="@+id/dpDate"

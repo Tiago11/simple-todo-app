@@ -26,7 +26,7 @@
 
         <activity
             android:name=".activities.AddTodoItemActivity"
-            android:label="Add new Item"
+            android:label=""
             android:parentActivityName=".activities.MainActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->

@@ -3,13 +3,16 @@ package com.codepath.tiago.simpletodo.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.tiago.simpletodo.R;
@@ -96,9 +99,22 @@ public class EditTodoItemDialogFragment extends DialogFragment {
         dpEditDate.setMinDate(System.currentTimeMillis() - 1000);
 
         // Set and create an alertDialog with our custom view.
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.EditDialog);
 
-        alertDialogBuilder.setTitle("Edit a Todo item"); // Todo: change hardcoded string.
+        // Create custom title for the dialog.
+        TextView dialogTitle = new TextView(getContext());
+        dialogTitle.setText(R.string.edit_item_label);
+        dialogTitle.setGravity(Gravity.CENTER);
+        if (Build.VERSION.SDK_INT < 23) {
+            dialogTitle.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+        } else {
+            dialogTitle.setTextAppearance(android.R.style.TextAppearance_Large);
+        }
+        dialogTitle.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        // Set the custom title to the dialog.
+        alertDialogBuilder.setCustomTitle(dialogTitle);
+
         alertDialogBuilder.setView(v);
         alertDialogBuilder.setCancelable(true);
 

@@ -45,6 +45,10 @@ public class AddTodoItemActivity extends AppCompatActivity {
             // Enable the Up button
             ab.setDisplayHomeAsUpEnabled(true);
 
+            // Show app-icon on the toolbar.
+            ab.setDisplayShowHomeEnabled(true);
+            ab.setIcon(R.drawable.ic_bow);
+
             // set today's date on the date picker.
             setCurrentDateOnView();
         } catch (Exception e) {

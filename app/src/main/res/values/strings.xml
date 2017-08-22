@@ -3,11 +3,12 @@
     <string name="enter_new_item_label">Enter a new item</string>
     <string name="btn_add_item_label">Add item</string>
     <string name="submit_edit_btn_label">Save changes</string>
-    <string name="edit_item_label">Edit item below:</string>
+    <string name="edit_item_label">Edit a Todo item</string>
     <string name="main_activity_title">Simple Todo App</string>
     <string name="edit_item_activity_title">Edit Item</string>
     <string name="add_title_label">Title:</string>
     <string name="add_date_label">Select date:</string>
     <string name="edit_title_label">New Title:</string>
-    <string name="edit_date_label">New Date</string>
+    <string name="edit_date_label">New Date:</string>
+    <string name="add_new_item_activity_label">Add new item</string>
 </resources>
