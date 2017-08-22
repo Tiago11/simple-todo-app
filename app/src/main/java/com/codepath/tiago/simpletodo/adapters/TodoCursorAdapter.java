@@ -10,6 +10,10 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.codepath.tiago.simpletodo.R;
+import com.codepath.tiago.simpletodo.models.TodoItem;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by tiago on 8/22/17.
@@ -20,8 +24,12 @@ public class TodoCursorAdapter extends CursorAdapter {
     // Tag for logging.
     private final static String TAG = TodoCursorAdapter.class.toString();
 
+    // We keep a reference to the context.
+    private final Context context;
+
     public TodoCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
+        this.context = context;
     }
 
     /*
@@ -48,14 +56,41 @@ public class TodoCursorAdapter extends CursorAdapter {
             String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 
+            String dateToDisplay = getDateToDisplay(date);
+
             // Populate fields with extracted values.
             tvTitle.setText(title);
-            tvDate.setText(date);
+            tvDate.setText(dateToDisplay);
 
         } catch (IllegalArgumentException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
 
+    }
+
+    /*
+     * Returns "Today" if |date| is today's date, "Tomorrow" if |date| is tomorrow's date or
+     * |date| otherwise.
+     */
+    private String getDateToDisplay(String strDate) {
+
+        Calendar c = Calendar.getInstance();
+        Date today = c.getTime();
+        String strToday = TodoItem.dateToString(today);
+
+        if (strDate.equals(strToday)) {
+            return this.context.getResources().getString(R.string.today);
+        }
+
+        c.add(Calendar.DATE, 1);
+        Date tomorrow = c.getTime();
+        String strTomorrow = TodoItem.dateToString(tomorrow);
+
+        if (strDate.equals(strTomorrow)) {
+            return this.context.getResources().getString(R.string.tomorrow);
+        }
+
+        return strDate;
     }
 }
 

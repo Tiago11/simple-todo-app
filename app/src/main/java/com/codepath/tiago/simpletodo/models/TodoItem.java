@@ -112,6 +112,34 @@ public class TodoItem extends BaseModel {
         return fDate;
     }
 
+    /*
+     * Static method that converts a String (in our specific format) to a Date.
+     */
+    public static Date strToDate(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        Date fDate;
+        try {
+            // Parse the string.
+            fDate = formatter.parse(date);
+        } catch (ParseException e) {
+            // Log the error.
+            Log.e(TAG, Log.getStackTraceString(e));
+
+            // Assign today's date.
+            fDate = new Date();
+        }
+
+        return fDate;
+    }
+
+    /*
+     * Static method that converts a Date to a String (in our specific format).
+     */
+    public static String dateToString(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        return formatter.format(date);
+    }
+
     @Override
     public String toString() {
         return this.title.toString();

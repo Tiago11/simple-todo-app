@@ -12,4 +12,6 @@
     <string name="edit_date_label">New Date:</string>
     <string name="add_new_item_activity_label">Add new item</string>
     <string name="alert_delete">Are you sure? It won\'t be possible to recover the contents of this item.</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>
